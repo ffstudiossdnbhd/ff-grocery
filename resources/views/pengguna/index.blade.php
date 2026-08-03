@@ -14,7 +14,7 @@
     </a>
 </div>
 
-<div class="card" style="padding: 0;">
+<div class="card mobile-admin-table pengurusan-pengguna-admin" style="padding: 0;">
     <div class="table-wrapper">
         <table class="custom-table">
             <thead>
@@ -29,23 +29,23 @@
             <tbody>
                 @forelse($users as $user)
                 <tr>
-                    <td><strong>{{ $user->name }}</strong></td>
-                    <td>{{ $user->email }}</td>
-                    <td>
+                    <td data-label="Nama Penuh"><strong>{{ $user->name }}</strong></td>
+                        <td data-label="Alamat E-mel"><span class="pengguna-email">{{ $user->email }}</span></td>
+                    <td data-label="Peranan (Role)">
                         @php
                             $role = $user->roles->first();
                         @endphp
                         @if($role?->name === 'Stocker')
-                            <span class="badge badge-success">{{ $role->name }}</span>
+                            <span class="badge badge-success user-role-pill">{{ $role->name }}</span>
                         @elseif($role?->name === 'Tracker')
-                            <span class="badge badge-primary">{{ $role->name }}</span>
+                            <span class="badge badge-primary user-role-pill">{{ $role->name }}</span>
                         @else
-                            <span class="badge badge-secondary">Tiada Peranan</span>
+                            <span class="badge badge-secondary user-role-pill">Tiada Peranan</span>
                         @endif
                     </td>
-                    <td>{{ $user->created_at->format('d/m/Y') }}</td>
-                    <td style="text-align: right;">
-                        <div style="display: inline-flex; gap: 8px;">
+                    <td data-label="Tarikh Didaftarkan">{{ $user->created_at->format('d/m/Y') }}</td>
+                        <td data-label="Tindakan">
+                        <div class="pengguna-actions" style="display: inline-flex; gap: 8px;">
                             <a href="{{ route('pengguna.edit', $user->id) }}" class="btn btn-secondary btn-sm" title="Edit Pengguna">
                                 <i class="fa-solid fa-user-gear"></i>
                             </a>
@@ -74,4 +74,19 @@
         {{ $users->links() }}
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const emailEls = document.querySelectorAll('.pengguna-email');
+
+        const updateEmailSizing = () => {
+            emailEls.forEach((el) => {
+                el.classList.toggle('pengguna-email--compact', el.scrollWidth > el.clientWidth + 1);
+            });
+        };
+
+        updateEmailSizing();
+        window.addEventListener('resize', updateEmailSizing);
+    });
+</script>
 @endsection

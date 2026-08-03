@@ -31,7 +31,7 @@
             $endOfWeek = '-';
         }
     @endphp
-    <div class="card" style="margin-bottom: 2rem; border: 1px solid rgba(99, 102, 241, 0.2);">
+    <div class="card mobile-admin-table tuntutan-pembelian" style="margin-bottom: 2rem; border: 1px solid rgba(99, 102, 241, 0.2);">
         <div class="card-header-flex" style="border-bottom-color: rgba(99, 102, 241, 0.2);">
             <div>
                 <h2 style="font-size: 1.25rem; font-weight: 700; color: #fff;">
@@ -54,10 +54,10 @@
                         <th>Barang Pembelian</th>
                         <th>Tarikh Beli</th>
                         <th>Nilai Tuntutan</th>
-                        <th class="claim-status-cell">Status</th>
-                        @role('Superadmin')
-                        <th style="text-align: right;">Tindakan Superadmin</th>
-                        @endrole
+                    <th class="claim-status-cell">Status</th>
+                    @role('Superadmin')
+                        <th>Tindakan Superadmin</th>
+                    @endrole
                     </tr>
                 </thead>
                 <tbody>
@@ -71,23 +71,23 @@
                         </td>
                         <td data-label="Jenis">
                             @if($claim->tag === 'Stok')
-                                <span class="badge badge-primary" style="display: inline-flex; align-items: center; gap: 4px;">
-                                    <i class="fa-solid fa-boxes-stacked" style="font-size: 0.7rem;"></i> Stok
+                                <span class="badge badge-primary claim-type-pill">
+                                    <i class="fa-solid fa-boxes-stacked claim-type-icon"></i> <span class="claim-type-text">Stok</span>
                                 </span>
                             @elseif($claim->tag === 'General')
-                                <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa; display: inline-flex; align-items: center; gap: 4px;">
-                                    <i class="fa-solid fa-folder-open" style="font-size: 0.7rem;"></i> General
+                                <span class="badge claim-type-pill claim-type-general">
+                                    <i class="fa-solid fa-folder-open claim-type-icon"></i> <span class="claim-type-text">General</span>
                                 </span>
                             @elseif($claim->tag === 'Food')
-                                <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d; display: inline-flex; align-items: center; gap: 4px;">
-                                    <i class="fa-solid fa-bowl-food" style="font-size: 0.7rem;"></i> Food
+                                <span class="badge claim-type-pill claim-type-food">
+                                    <i class="fa-solid fa-bowl-food claim-type-icon"></i> <span class="claim-type-text">Food</span>
                                 </span>
                             @elseif($claim->tag === 'Lunch')
-                                <span class="badge badge-success" style="display: inline-flex; align-items: center; gap: 4px;">
-                                    <i class="fa-solid fa-seedling" style="font-size: 0.7rem;"></i> Lunch
+                                <span class="badge badge-success claim-type-pill claim-type-lunch">
+                                    <i class="fa-solid fa-seedling claim-type-icon"></i> <span class="claim-type-text">Lunch</span>
                                 </span>
                             @else
-                                <span style="font-size: 0.8rem; color: var(--text-dark);">{{ $claim->tag }}</span>
+                                <span class="claim-type-pill claim-type-plain">{{ $claim->tag }}</span>
                             @endif
                         </td>
                         <td data-label="Barang Pembelian">
@@ -112,22 +112,22 @@
                             @endif
                         </td>
                         @role('Superadmin')
-                        <td data-label="Tindakan Superadmin" style="text-align: right;">
+                        <td data-label="Tindakan Superadmin">
                             @if($claim->status === 'Dalam Proses')
-                            <div style="display: inline-flex; gap: 8px;">
-                                <form action="{{ route('tuntutan.status', $claim->id) }}" method="POST" style="display:inline;">
+                            <div class="claim-action-row">
+                                <form action="{{ route('tuntutan.status', $claim->id) }}" method="POST" class="claim-action-form">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="Selesai">
-                                    <button type="submit" class="btn btn-success btn-sm">
+                                    <button type="submit" class="btn btn-success btn-sm claim-action-btn">
                                         <i class="fa-solid fa-check"></i> Lulus
                                     </button>
                                 </form>
-                                <form action="{{ route('tuntutan.status', $claim->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('tuntutan.status', $claim->id) }}" method="POST" class="claim-action-form">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="Ditolak">
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <button type="submit" class="btn btn-danger btn-sm claim-action-btn">
                                         <i class="fa-solid fa-xmark"></i> Tolak
                                     </button>
                                 </form>

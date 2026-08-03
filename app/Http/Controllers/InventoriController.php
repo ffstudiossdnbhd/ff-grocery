@@ -32,6 +32,7 @@ class InventoriController extends Controller
         $query = Inventori::with('kategoriPreset');
 
         $today = now()->startOfDay();
+        $soonThreshold = now()->startOfDay()->addDays(3);
         $inventorySummary = [
             'totalItems' => Inventori::count(),
             'totalUnits' => (int) Inventori::sum('jumlah_belum_dibuka'),
@@ -53,6 +54,43 @@ class InventoriController extends Controller
         // Penapisan kategori
         if ($request->filled('kategori')) {
             $query->where('kategori_id', $request->kategori);
+        }
+
+        if ($request->filled('status')) {
+            switch ($request->status) {
+                case 'habis_stok':
+                    $query->where('jumlah_belum_dibuka', 0);
+                    break;
+
+                case 'bawah_had':
+                    $query->where('jumlah_belum_dibuka', '>', 0)
+                        ->whereColumn('jumlah_belum_dibuka', '<=', 'had_ambang');
+                    break;
+
+                case 'sudah_luput':
+                    $query->where('jejak_luput', true)
+                        ->whereNotNull('tarikh_luput')
+                        ->where('tarikh_luput', '<', $today);
+                    break;
+
+                case 'hampir_luput':
+                    $query->where('jejak_luput', true)
+                        ->whereNotNull('tarikh_luput')
+                        ->whereBetween('tarikh_luput', [$today, $soonThreshold]);
+                    break;
+            }
+        }
+
+        if ($request->filled('jejak_luput')) {
+            switch ($request->jejak_luput) {
+                case 'dijejak':
+                    $query->where('jejak_luput', true);
+                    break;
+
+                case 'tidak_dijejak':
+                    $query->where('jejak_luput', false);
+                    break;
+            }
         }
 
         $activeSort = $this->normalizedInventorySort($request->query('sort'));

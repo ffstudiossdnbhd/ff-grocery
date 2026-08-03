@@ -68,7 +68,7 @@
     </form>
 </div>
 
-<div class="card inventori-list-card" style="padding: 0;">
+<div class="card inventori-list-card mobile-admin-table pengurusan-kategori-admin" style="padding: 0;">
     <form id="kategoriBulkForm" action="{{ route('kategori.update-all') }}" method="POST">
         @csrf
         @method('PUT')
@@ -101,7 +101,7 @@
                             ?? $category->warna;
                     @endphp
                     <tr>
-                        <td>
+                    <td data-label="Nama Kategori">
                             <input
                                 type="text"
                                 name="categories[{{ $category->id }}][nama]"
@@ -117,7 +117,7 @@
                                 <div style="color: var(--color-danger); font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div>
                             @enderror
                         </td>
-                        <td>
+                        <td data-label="Warna">
                             <div class="kategori-color-control">
                                 <input
                                     type="color"
@@ -140,14 +140,15 @@
                                 <div style="color: var(--color-danger); font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div>
                             @enderror
                         </td>
-                        <td>
-                            <span class="badge badge-primary">{{ $category->inventori_count }} item</span>
+                        <td data-label="Jumlah Item">
+                            <strong>{{ $category->inventori_count }} item</strong>
                         </td>
-                        <td style="text-align: right;">
+                        <td data-label="Tindakan">
                             @if($category->inventori_count > 0)
                                 <span
                                     title="Kategori ini masih digunakan oleh item inventori."
                                     style="color: var(--text-muted); font-size: 0.8rem;"
+                                    class="kategori-lock-note"
                                 >
                                     <i class="fa-solid fa-circle-info"></i>
                                     Tidak boleh dipadam: digunakan oleh item inventori
@@ -160,8 +161,9 @@
                                 >
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Padam kategori">
+                                    <button type="submit" class="btn btn-danger btn-sm kategori-delete-btn" title="Padam kategori">
                                         <i class="fa-solid fa-trash"></i>
+                                        <span>Buang</span>
                                     </button>
                                 </form>
                             @endif

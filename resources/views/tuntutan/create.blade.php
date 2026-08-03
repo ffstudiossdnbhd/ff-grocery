@@ -142,11 +142,11 @@
 
                 <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
                     {{-- Header --}}
-                    <div style="display: grid; grid-template-columns: 140px 1fr 90px 110px; background: var(--bg-surface-hover); border-bottom: 1px solid var(--border-color); padding: 0.6rem 0.75rem; gap: 12px;">
-                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Tarikh</span>
-                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Butiran Lunch</span>
-                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; text-align: right;">Pax</span>
-                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; text-align: right;">Harga/Pax</span>
+                    <div class="lunch-grid-header">
+                        <span>Tarikh</span>
+                        <span>Butiran Lunch</span>
+                        <span>Pax</span>
+                        <span>Harga/Pax</span>
                     </div>
 
                     {{-- Rows container --}}
@@ -285,6 +285,65 @@
     /* Lunch inputs in the table row */
     #section-lunch .lunch-input { display: block; }
     #lunch_jumlah_wrapper { margin-top: 0; }
+
+    .lunch-grid-header {
+        display: grid;
+        grid-template-columns: 140px 1fr 90px 110px;
+        background: var(--bg-surface-hover);
+        border-bottom: 1px solid var(--border-color);
+        padding: 0.6rem 0.75rem;
+        gap: 12px;
+    }
+
+    .lunch-day-row {
+        display: grid;
+        grid-template-columns: 140px 1fr 90px 110px;
+        gap: 12px;
+        padding: 0.4rem 0.75rem;
+        align-items: center;
+        transition: background var(--transition-fast);
+    }
+
+    .lunch-grid-header span {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        line-height: 1.2;
+    }
+
+    .lunch-grid-header span:nth-child(3),
+    .lunch-grid-header span:nth-child(4) {
+        text-align: right;
+    }
+
+    .lunch-day-row .lunch-day-numeric {
+        text-align: right;
+    }
+
+    .lunch-day-row .lunch-day-numeric input {
+        text-align: right;
+        padding-right: 0.55rem;
+    }
+
+    @media (max-width: 768px) {
+        .lunch-grid-header,
+        .lunch-day-row {
+            grid-template-columns: 120px 1fr 80px 90px;
+            gap: 0.55rem;
+        }
+
+        .lunch-grid-header span {
+            font-size: 0.72rem;
+        }
+
+        .lunch-day-row .lunch-day-date,
+        .lunch-day-row .lunch-day-numeric,
+        .lunch-day-row .lunch-day-note {
+            min-width: 0;
+        }
+    }
 </style>
 
 <script>
@@ -459,28 +518,24 @@
             }
             
             const row = document.createElement('div');
-            row.style.display = 'grid';
-            row.style.gridTemplateColumns = '140px 1fr 90px 110px';
-            row.style.gap = '12px';
-            row.style.padding = '0.4rem 0.75rem';
-            row.style.alignItems = 'center';
+            row.className = 'lunch-day-row';
             row.style.borderBottom = index < 6 ? '1px solid var(--border-color)' : 'none';
             
             row.innerHTML = `
-                <div>
+                <div class="lunch-day-date">
                     <span style="font-size: 0.85rem; font-weight: 500; display: block; color: var(--text-main);">${dayNames[index]}</span>
                     <span style="font-size: 0.75rem; color: var(--text-muted);">${formatDateDisplay(dateStr)}</span>
                     <input type="hidden" name="lunch_dates[]" value="${dateStr}">
                 </div>
-                <div>
+                <div class="lunch-day-note">
                     <input type="text" name="lunch_butirans[]" class="lunch-input" 
                         value="${escapeHtml(butiranVal)}" placeholder="Butiran lunch..." autocomplete="off">
                 </div>
-                <div>
+                <div class="lunch-day-numeric">
                     <input type="number" name="lunch_pax[]" class="lunch-input lunch-pax-input" 
                         value="${paxVal}" min="0" placeholder="0" autocomplete="off" style="text-align: right;">
                 </div>
-                <div>
+                <div class="lunch-day-numeric">
                     <input type="number" name="lunch_hargas[]" class="lunch-input lunch-harga-input" 
                         value="${hargaVal}" step="0.01" min="0" placeholder="0.00" autocomplete="off" style="text-align: right;">
                 </div>

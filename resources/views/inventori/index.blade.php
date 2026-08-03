@@ -18,18 +18,38 @@
 
         .mobile-card-stats {
             display: grid !important;
-            grid-template-columns: 1fr !important;
-            gap: 8px !important;
-            text-align: center !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 5px !important;
+            text-align: right !important;
+            margin-top: 0 !important;
+            align-self: end !important;
         }
         .stat-box {
             display: flex !important;
-            flex-direction: column !important;
+            flex-direction: row !important;
             align-items: center !important;
+            justify-content: space-between !important;
+            flex-wrap: nowrap !important;
+            min-width: 0 !important;
+            width: 100% !important;
+            gap: 6px !important;
+        }
+        .mobile-card-stats > .stat-box:only-child {
+            grid-column: 1 / -1 !important;
+        }
+        .stat-box .stat-val {
+            display: inline-flex !important;
+            align-items: baseline !important;
+            white-space: nowrap !important;
+            text-align: right !important;
+            flex-wrap: nowrap !important;
+        }
+        .stat-box .stat-val .inventory-unit-label {
+            white-space: nowrap !important;
         }
         .stat-box .stat-label {
             white-space: nowrap !important;
-            font-size: 0.65rem !important;
+            font-size: 0.58rem !important;
             letter-spacing: 0.2px !important;
         }
     }
@@ -97,8 +117,8 @@
 </section>
 
 <!-- Penapis dan Carian -->
-<div class="card" style="padding: 1.25rem; margin-bottom: 1.5rem;">
-    <form action="{{ route('inventori.index') }}" method="GET" class="inventori-filter-form">
+<div class="card inventori-filter-card" style="padding: 1.25rem; margin-bottom: 1.5rem;">
+    <form action="{{ route('inventori.index') }}" method="GET" class="inventori-filter-form inventori-filter-form-desktop">
         @if($activeSort)
             <input type="hidden" name="sort" value="{{ $activeSort }}">
         @endif
@@ -118,8 +138,72 @@
                     <option value="{{ $kat->id }}" {{ (string) request('kategori') === (string) $kat->id ? 'selected' : '' }}>{{ $kat->nama }}</option>
                 @endforeach
             </select>
-            @if(request('carian') || request('kategori') || $activeSort)
-                <a href="{{ route('inventori.index') }}" class="btn btn-secondary" style="background: transparent; border: none; white-space: nowrap;">Set Semula</a>
+            @if(request('carian') || request('kategori') || request('status') || request('jejak_luput') || $activeSort)
+                <a href="{{ route('inventori.index') }}" class="btn btn-secondary inventori-reset-btn-desktop" style="background: transparent; border: none; white-space: nowrap;">Set Semula</a>
+            @endif
+        </div>
+    </form>
+
+    <form action="{{ route('inventori.index') }}" method="GET" class="inventori-filter-form inventori-filter-form-mobile">
+        <div class="inventori-search-row">
+            <div class="inventori-search-input">
+                <input type="text" name="carian" class="form-control" placeholder="Cari Nama/Jenama..." value="{{ request('carian') }}">
+            </div>
+            <button type="submit" class="btn btn-secondary inventori-submit-btn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span class="tapis-label">Tapis</span>
+            </button>
+        </div>
+        @php
+            $hasMobileAdvancedFilters = request('kategori') || request('status') || request('jejak_luput') || $activeSort;
+        @endphp
+        <div class="inventori-mobile-filter-bar">
+            <details class="inventori-mobile-collapsible" {{ $hasMobileAdvancedFilters ? 'open' : '' }}>
+                <summary class="inventori-mobile-collapsible-summary">
+                    <span class="inventori-mobile-collapsible-label">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>Penapis</span>
+                    </span>
+                    <i class="fa-solid fa-chevron-down inventori-mobile-collapsible-chevron"></i>
+                </summary>
+                <div class="inventori-mobile-collapsible-body">
+                    <div class="inventori-filter-grid">
+                        <select name="kategori" class="form-control">
+                            <option value="">Semua Kategori</option>
+                            @foreach($kategoriSenarai as $kat)
+                                <option value="{{ $kat->id }}" {{ (string) request('kategori') === (string) $kat->id ? 'selected' : '' }}>{{ $kat->nama }}</option>
+                            @endforeach
+                        </select>
+                        <select name="status" class="form-control">
+                            <option value="">Semua Status</option>
+                            <option value="habis_stok" {{ request('status') === 'habis_stok' ? 'selected' : '' }}>Habis Stok</option>
+                            <option value="bawah_had" {{ request('status') === 'bawah_had' ? 'selected' : '' }}>Bawah Had</option>
+                            <option value="sudah_luput" {{ request('status') === 'sudah_luput' ? 'selected' : '' }}>Sudah Luput</option>
+                            <option value="hampir_luput" {{ request('status') === 'hampir_luput' ? 'selected' : '' }}>Hampir Luput</option>
+                        </select>
+                        <select name="jejak_luput" class="form-control">
+                            <option value="">Semua Tarikh Luput</option>
+                            <option value="dijejak" {{ request('jejak_luput') === 'dijejak' ? 'selected' : '' }}>Dijejak</option>
+                            <option value="tidak_dijejak" {{ request('jejak_luput') === 'tidak_dijejak' ? 'selected' : '' }}>Tidak Dijejak</option>
+                        </select>
+                        <select name="sort" class="form-control inventori-sort-mobile-only">
+                            <option value="">Susun: Nama A-Z</option>
+                            <option value="nama_asc" {{ $activeSort === 'nama_asc' ? 'selected' : '' }}>Nama A-Z</option>
+                            <option value="nama_desc" {{ $activeSort === 'nama_desc' ? 'selected' : '' }}>Nama Z-A</option>
+                            <option value="kategori_asc" {{ $activeSort === 'kategori_asc' ? 'selected' : '' }}>Kategori A-Z</option>
+                            <option value="kategori_desc" {{ $activeSort === 'kategori_desc' ? 'selected' : '' }}>Kategori Z-A</option>
+                            <option value="baki_desc" {{ $activeSort === 'baki_desc' ? 'selected' : '' }}>Baki Tertinggi</option>
+                            <option value="baki_asc" {{ $activeSort === 'baki_asc' ? 'selected' : '' }}>Baki Terendah</option>
+                            <option value="tarikh_luput_asc" {{ $activeSort === 'tarikh_luput_asc' ? 'selected' : '' }}>Luput Terdekat</option>
+                            <option value="tarikh_luput_desc" {{ $activeSort === 'tarikh_luput_desc' ? 'selected' : '' }}>Luput Terjauh</option>
+                        </select>
+                    </div>
+                </div>
+            </details>
+            @if(request('carian') || request('kategori') || request('status') || request('jejak_luput') || $activeSort)
+                <div class="inventori-filter-actions inventori-filter-actions-mobile">
+                <a href="{{ route('inventori.index') }}" class="btn btn-secondary inventori-reset-btn">Set Semula</a>
+                </div>
             @endif
         </div>
     </form>
@@ -147,7 +231,7 @@
                     </td>
                     <td data-label="Nama Item">
                         <div class="table-item-info">
-                            <div style="font-weight: 600; font-size: 1rem; color: #fff;">{{ $item->nama_item }}</div>
+                            <div style="font-weight: 600; font-size: 0.92rem; color: #fff;">{{ $item->nama_item }}</div>
                             @if($item->jenis || $item->capacity)
                                 <div style="font-size: 0.78rem; color: var(--text-dark); margin-top: 2px;">
                                     @if($item->jenis)<strong>{{ $item->jenis }}</strong>@endif
@@ -312,19 +396,22 @@
                 <input type="number" name="jumlah_belum_dibuka" id="adj_belum_dibuka" class="form-control" min="0" required>
             </div>
             
-            <div class="adjustment-modal-primary-actions">
-                <button type="button" onclick="tutupModalPelarasan()" class="btn btn-secondary">Batal</button>
-                <button type="submit" class="btn btn-success">Simpan Pelarasan</button>
-            </div>
         </form>
 
-        <div class="adjustment-modal-secondary-actions">
+        <div class="adjustment-modal-primary-actions">
             <a id="modalEditLink" href="#" class="btn btn-secondary">
                 <i class="fa-solid fa-pen"></i>
-                <span>Edit<br>Barangan</span>
+                <span>Edit Barangan</span>
             </a>
+        </div>
+
+        <div class="adjustment-modal-secondary-actions">
+            <button type="submit" form="formPelarasan" class="btn btn-success">
+                <i class="fa-solid fa-check"></i>
+                <span>Simpan<br>Pelarasan</span>
+            </button>
             @hasanyrole('Superadmin|Stocker|Tracker')
-            <form id="modalDeleteForm" method="POST" onsubmit="return confirm('Adakah anda pasti mahu memadam item ini?')">
+            <form id="modalDeleteForm" method="POST" onsubmit="return confirm('Adakah anda pasti mahu memadam barangan ini?')">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger">
