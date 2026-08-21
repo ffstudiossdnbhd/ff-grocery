@@ -34,7 +34,7 @@
     </script>
 
     <!-- CSS Utama -->
-    <link rel="stylesheet" href="/css/app.css?v=2.22">
+    <link rel="stylesheet" href="/css/app.css?v=2.23">
     
     <!-- FontAwesome (untuk ikon sampingan) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -160,16 +160,6 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-secondary btn-sm sidebar-action-button theme-toggle" data-theme-toggle aria-pressed="false">
-                    <i class="fa-solid fa-sun" data-theme-icon></i>
-                    <span data-theme-label>Mod cerah</span>
-                </button>
-
-                <button type="button" class="btn btn-secondary btn-sm sidebar-action-button pwa-install-button" data-pwa-install hidden>
-                    <i class="fa-solid fa-download"></i>
-                    <span>Pasang aplikasi</span>
-                </button>
-                
                 <form action="{{ route('logout') }}" method="POST" class="sidebar-action-form">
                     @csrf
                     <button type="submit" class="btn btn-secondary btn-sm sidebar-action-button">
@@ -177,6 +167,18 @@
                         <span>Log Keluar</span>
                     </button>
                 </form>
+
+                <div class="sidebar-secondary-actions">
+                    <button type="button" class="btn btn-secondary btn-sm sidebar-action-button theme-toggle" data-theme-toggle aria-pressed="false">
+                        <i class="fa-solid fa-sun" data-theme-icon></i>
+                        <span data-theme-label>Mod cerah</span>
+                    </button>
+
+                    <button type="button" class="btn btn-secondary btn-sm sidebar-action-button pwa-install-button" data-pwa-install hidden>
+                        <i class="fa-solid fa-download"></i>
+                        <span>Pasang aplikasi</span>
+                    </button>
+                </div>
             </div>
             @endauth
         </aside>

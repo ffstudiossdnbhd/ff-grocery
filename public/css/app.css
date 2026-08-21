@@ -1810,6 +1810,16 @@ select.form-control option {
 }
 
 /* Theme controls and loading state */
+.sidebar-secondary-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.sidebar-secondary-actions:has(.pwa-install-button[hidden]) {
+    grid-template-columns: 1fr;
+}
+
 .theme-toggle {
     width: 100%;
 }

@@ -51,6 +51,11 @@ class FFGroceryTest extends TestCase
         $response->assertSee('data-theme-toggle', false);
         $response->assertSee('ffgrocery-theme', false);
         $response->assertSee("savedTheme === 'dark' ? 'dark' : 'light'", false);
+        $response->assertSee('sidebar-secondary-actions', false);
+        $response->assertSeeInOrder([
+            'class="sidebar-action-form"',
+            'class="sidebar-secondary-actions"',
+        ], false);
     }
 
     public function test_category_color_defaults_to_current_indigo(): void
