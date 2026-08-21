@@ -3,10 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FFGrocery">
     <title>Log Masuk | FFGrocery</title>
     
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/icon-192.png">
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/pwa.js?v=4" defer></script>
     
     <style>
         .login-wrapper {
@@ -118,6 +125,11 @@
                 <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem; border-radius: var(--radius-sm);">
                     <span>Log Masuk</span>
                     <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+
+                <button type="button" class="btn btn-secondary btn-sm pwa-install-button" data-pwa-install hidden style="margin-top: 1rem; width: 100%; justify-content: center;">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Pasang aplikasi</span>
                 </button>
             </form>
 
